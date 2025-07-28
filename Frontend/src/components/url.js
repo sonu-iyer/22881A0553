@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, IconButton } from '@mui/material';
 import { AddCircle, RemoveCircle } from '@mui/icons-material';
 import { log as logger } from '../utils/logger';
+import { Log } from '../LoggingMiddleware/log';
 
 export default function URLShortener({ onShorten }) {
   const [urls, setUrls] = useState([
@@ -32,10 +33,17 @@ export default function URLShortener({ onShorten }) {
       const shortURL = `${window.location.origin}/${hash}`;
       const expiry = validity ? new Date().getTime() + parseInt(validity) * 60000 : null;
       const entry = { shortURL, longUrl, expiry };
+
+      // Save to local storage
       localStorage.setItem(hash, JSON.stringify(entry));
+
+      // ✅ Use both loggers
       logger(`Shortened: ${longUrl} to ${shortURL}`);
+      Log('frontend', 'info', 'url', `Shortened URL: ${longUrl} → ${shortURL}`);
+
       return entry;
     });
+
     onShorten(results.filter(r => !r.error));
     setUrls([{ longUrl: '', validity: '', shortcode: '' }]);
   };
