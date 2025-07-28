@@ -4,8 +4,13 @@ import URLShortener from './components/url';
 import StatisticsPage from './components/statistics';
 import RedirectHandler from './components/redirect';
 import { AppBar, Toolbar, Typography, Button, Box, List, ListItem, Divider } from '@mui/material';
+import { Log } from './LoggingMiddleware/log'; 
+import {useEffect} from 'react';
 
 function App() {
+  useEffect(() => {
+    Log('frontend', 'info', 'app', 'App started');
+  }, []);
   const [shortened, setShortened] = useState([]);
 
   return (
